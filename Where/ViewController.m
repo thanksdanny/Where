@@ -45,7 +45,11 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    
+    [[CLGeocoder alloc] init] reverseGeocodeLocation:manager.location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        if (error != nil) {
+            <#statements#>
+        }
+    }
 }
 
 
