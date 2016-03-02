@@ -14,6 +14,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (nonatomic, strong) CLLocationManager *locationMgr;
 
+@property (nonatomic, strong) NSString *locality; // 城市
+@property (nonatomic, strong) NSString *postalCode; // 邮编
+@property (nonatomic, strong) NSString *administrativeArea; // 直辖市
+@property (nonatomic, strong) NSString *country; // 国家
+
 @end
 
 @implementation ViewController
@@ -45,14 +50,33 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    [[CLGeocoder alloc] init] reverseGeocodeLocation:manager.location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+    [[[CLGeocoder alloc] init] reverseGeocodeLocation:manager.location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         if (error != nil) {
-            <#statements#>
+            self.locationLabel.text = [NSString stringWithFormat:@"Reverse geocoder failed with error %@", error.localizedDescription];
+            return ;
         }
-    }
+        
+        if (placemarks.count > 0) {
+            CLPlacemark *pm = placemarks[0];
+            [self displayLocationInfo:pm];
+        } else {
+            self.locationLabel.text = @"Problem with the data received from geocoder";
+        }
+    }];
 }
 
-
+- (void)displayLocationInfo:(CLPlacemark *)placemark {
+    if (placemark) {
+        [self.locationMgr stopUpdatingLocation];
+        if (placemark.locality) {
+            self.locality = @"广州";
+            self.postalCode = @"123321";
+            self.administrativeArea = @"咯咯";
+            self.country = @"中国";
+        }
+        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@%@", self.locality, self.postalCode, self.administrativeArea, self.country];
+    }
+}
 
 
 // 记得写去掉状态栏
