@@ -69,24 +69,30 @@
     if (placemark) {
         [self.locationMgr stopUpdatingLocation];
         if (placemark.locality) {
-            self.locality = @"广州";
-            self.postalCode = @"123321";
-            self.administrativeArea = @"咯咯";
-            self.country = @"中国";
+            self.locality = [NSString stringWithFormat:@"%@", placemark.locality];
         }
-        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@%@", self.locality, self.postalCode, self.administrativeArea, self.country];
+        if (placemark.postalCode) {
+            self.postalCode = [NSString stringWithFormat:@"%@", placemark.postalCode];
+        }
+        if (placemark.administrativeArea) {
+            self.administrativeArea = [NSString stringWithFormat:@"%@", placemark.administrativeArea];
+        }
+        if (placemark.country) {
+            self.country = [NSString stringWithFormat:@"%@", placemark.country];
+        }
+        self.locationLabel.text = [NSString stringWithFormat:@"%@%@%@", self.locality, self.administrativeArea, self.country];
     }
 }
 
 
 // 记得写去掉状态栏
-- (void)qudiaozhuangtailan {
-    
+- (BOOL)prefersStatusBarHidden{
+    return YES;
 }
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
 }
 
 - (void)didReceiveMemoryWarning {
